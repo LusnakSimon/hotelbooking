@@ -19,7 +19,7 @@ class Configuration
     /**
      * Application name.
      */
-    public const APP_NAME = 'Vaííčko MVC FW';
+    public const APP_NAME = 'Hotelbooking';
 
     /**
      * Version of the framework.
@@ -30,7 +30,7 @@ class Configuration
      * Database connection settings.
      */
     public const DB_HOST = 'db';  // Hostname for the database service (defined in docker/docker-compose.yml)
-    public const DB_NAME = 'vaiicko_db'; // Database name (defined in docker/.env)
+    public const DB_NAME = 'hotelbooking'; // Database name (defined in docker/.env)
     public const DB_USER = 'vaiicko_user'; // Username for database access (defined in docker/.env)
     public const DB_PASS = 'dtb456'; // Password for database access (defined in docker/.env)
 
@@ -66,7 +66,7 @@ class Configuration
      * Class name for the authenticator. This class must implement the IAuthenticator interface. Comment out this line
      * if authentication is not required in the application.
      */
-    public const AUTH_CLASS = DummyAuthenticator::class;
+    public const AUTH_CLASS = \App\Auth\Authenticator::class;
 
     /**
      * Class name for the error handler. This class must implement the IHandleError interface.

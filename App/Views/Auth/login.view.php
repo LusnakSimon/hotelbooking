@@ -12,14 +12,14 @@ $view->setLayout('auth');
         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
             <div class="card card-signin my-5">
                 <div class="card-body">
-                    <h5 class="card-title text-center">Username</h5>
+                    <h5 class="card-title text-center">Login</h5>
                     <div class="text-center text-danger mb-3">
-                        <?= @$message ?>
+                        <?= isset($error) ? htmlspecialchars($error) : (isset($message) ? htmlspecialchars($message) : '') ?>
                     </div>
-                    <form class="form-signin" method="post" action="<?= $link->url("login") ?>">
+                    <form class="form-signin" method="post" action="<?= $link->url('auth.login') ?>">
                         <div class="form-label-group mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input name="username" type="text" id="username" class="form-control" placeholder="Username"
+                            <label for="email" class="form-label">Email</label>
+                            <input name="email" type="email" id="email" class="form-control" placeholder="email@example.com"
                                    required autofocus>
                         </div>
 
@@ -33,6 +33,9 @@ $view->setLayout('auth');
                             </button>
                         </div>
                     </form>
+                    <div class="mt-3 text-center">
+                        <a href="<?= $link->url('auth.register') ?>">Create an account</a>
+                    </div>
                 </div>
             </div>
         </div>
