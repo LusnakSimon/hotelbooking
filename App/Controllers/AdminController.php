@@ -5,6 +5,7 @@ namespace App\Controllers;
 use Framework\Core\BaseController;
 use Framework\Http\Request;
 use Framework\Http\Responses\Response;
+use App\Models\Hotel;
 
 /**
  * Class AdminController
@@ -27,7 +28,7 @@ class AdminController extends BaseController
      */
     public function authorize(Request $request, string $action): bool
     {
-        return $this->user->isLoggedIn();
+        return $this->user->isLoggedIn() && $this->user->getRole() === 'manager';
     }
 
     /**
@@ -39,6 +40,8 @@ class AdminController extends BaseController
      */
     public function index(Request $request): Response
     {
-        return $this->html();
+        $managerId = $this->user->getId();
+        $hotels = Hotel::getAll('`manager_id` = ?', [$managerId]);
+        return $this->html(compact('hotels'));
     }
 }
