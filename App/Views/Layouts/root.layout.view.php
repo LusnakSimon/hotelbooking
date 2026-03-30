@@ -7,6 +7,7 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= App\Configuration::APP_NAME ?></title>
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="<?= $link->asset('favicons/apple-touch-icon.png') ?>">
@@ -23,35 +24,63 @@
     <script src="<?= $link->asset('js/script.js') ?>"></script>
 </head>
 <body>
-<nav class="navbar navbar-expand-sm bg-light">
+<nav class="navbar navbar-expand-sm navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="<?= $link->url('home.index') ?>">
-            <img src="<?= $link->asset('images/vaiicko_logo.png') ?>" title="<?= App\Configuration::APP_NAME ?>" alt="Framework Logo">
-        </a>
-        <ul class="navbar-nav me-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="<?= $link->url('home.contact') ?>">Contact</a>
-            </li>
-        </ul>
-        <?php if ($user->isLoggedIn()) { ?>
-            <span class="navbar-text">Logged in user: <b><?= $user->getName() ?></b></span>
-            <ul class="navbar-nav ms-auto">
+        <a class="navbar-brand fw-semibold" href="<?= $link->url('home.index') ?>"><?= App\Configuration::APP_NAME ?></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= $link->url('auth.logout') ?>">Log out</a>
+                    <a class="nav-link" href="<?= $link->url('hotel.index') ?>">Hotels</a>
                 </li>
+                <?php if ($user->isLoggedIn()) { ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= $link->url('booking.index') ?>">Bookings</a>
+                    </li>
+                    <?php if ($user->getRole() === 'manager') { ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= $link->url('admin.index') ?>">Manage Hotels</a>
+                        </li>
+                    <?php } ?>
+                <?php } ?>
             </ul>
-        <?php } else { ?>
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= App\Configuration::LOGIN_URL ?>">Log in</a>
-                </li>
+            <ul class="navbar-nav ms-auto align-items-sm-center">
+                <?php if ($user->isLoggedIn()) { ?>
+                    <li class="nav-item">
+                        <span class="navbar-text me-2">Logged in: <b><?= htmlspecialchars($user->getName()) ?></b></span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= $link->url('auth.logout') ?>">Log out</a>
+                    </li>
+                <?php } else { ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= App\Configuration::LOGIN_URL ?>">Log in</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= $link->url('auth.register') ?>">Register</a>
+                    </li>
+                <?php } ?>
             </ul>
-        <?php } ?>
+        </div>
     </div>
 </nav>
 <div class="container-fluid mt-3">
     <div class="web-content">
         <?= $contentHTML ?>
+    </div>
+</div>
+<!-- Delete confirmation modal (reused across pages) -->
+<div class="modal fade" id="confirm-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body" id="confirm-modal-message">Are you sure?</div>
+            <div class="modal-footer p-2 border-0">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <a id="confirm-modal-ok" href="#" class="btn btn-danger btn-sm">Delete</a>
+            </div>
+        </div>
     </div>
 </div>
 </body>
