@@ -463,9 +463,9 @@ abstract class Model implements \JsonSerializable
             }
             
             if ($propertyName != $columnName) {
-                $dbColumns[] = "`$columnName` AS {$propertyName}";
+                $dbColumns[] = "`$columnName` AS `{$propertyName}`";
             } else {
-                $dbColumns[] = $columnName;
+                $dbColumns[] = "`$columnName`";
             }
         }
         
