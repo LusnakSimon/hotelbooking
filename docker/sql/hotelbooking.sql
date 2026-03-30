@@ -12,7 +12,7 @@ CREATE TABLE hotels (
     FOREIGN KEY (manager_id) REFERENCES `users`(id),
     location VARCHAR(255) NOT NULL,
     adress VARCHAR(255) NOT NULL,
-    image_url VARCHAR(255) NOT NULL,
+    image_path VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     price DECIMAL(10, 2) NOT NULL
 );
@@ -37,3 +37,4 @@ CREATE TABLE bookings (
     INDEX idx_dates (`from`, `until`),
     CHECK (`until` > `from`)
 );
+
