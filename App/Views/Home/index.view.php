@@ -3,37 +3,40 @@
 /** @var \Framework\Support\LinkGenerator $link */
 ?>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col mt-5">
-            <div class="text-center">
-                <h2>Vaííčko MVC FW</h2>
-                <h3>Version <?= App\Configuration::FW_VERSION ?></h3>
-                <img src="<?= $link->asset('images/vaiicko_logo.png') ?>" alt="Framework Logo">
-                <p>
-                    Congratulations, you have successfully installed and run the framework
-                    <strong>Vaííčko</strong> <?= App\Configuration::FW_VERSION ?>!<br>
-                    We hope that you will create a great application using this framework.<br>
-                </p>
-                <p>
-                    This simple framework was created for teaching purposes and to better understand how the MVC
-                    architecture works.<br>
-                    It is intended for students of the subject <em>web application development</em>, but not only
-                    for them.
-                </p>
+<div class="hero-section text-center py-5 mb-4">
+    <h1 class="hero-title">Find Your Perfect Stay</h1>
+    <p class="hero-subtitle text-muted">Browse hotels, compare rooms and book instantly.</p>
+    <a href="<?= $link->url('hotel.index') ?>" class="btn btn-primary btn-lg mt-2">Browse Hotels</a>
+</div>
+
+<div class="container">
+    <div class="row text-center g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card h-100 p-4 border-0 shadow-sm">
+                <div class="fs-1 mb-2">🏨</div>
+                <h5 class="fw-semibold">Wide Selection</h5>
+                <p class="text-muted small">Choose from hotels across multiple cities, each with detailed descriptions and room options.</p>
             </div>
         </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col text-center">
-            <h4>Authors</h4>
-            <div>
-                <a href="mailto:Patrik.Hrkut@fri.uniza.sk">doc. Ing. Patrik Hrkút, PhD.</a><br>
-                <a href="mailto:Michal.Duracik@fri.uniza.sk">Ing. Michal Ďuračík, PhD.</a><br>
-                <a href="mailto:Matej.Mesko@fri.uniza.sk">Ing. Matej Meško, PhD.</a><br><br>
-                &copy; 2020-<?= date('Y') ?> University of Žilina, Faculty of Management Science and Informatics,
-                Department of Software Technologies
+        <div class="col-md-4">
+            <div class="card h-100 p-4 border-0 shadow-sm">
+                <div class="fs-1 mb-2">🔍</div>
+                <h5 class="fw-semibold">Easy Filtering</h5>
+                <p class="text-muted small">Filter hotels by location and price range to find exactly what you need, instantly.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 p-4 border-0 shadow-sm">
+                <div class="fs-1 mb-2">📅</div>
+                <h5 class="fw-semibold">Simple Booking</h5>
+                <p class="text-muted small">Pick your dates and confirm your booking in seconds. Manage everything from your bookings page.</p>
             </div>
         </div>
     </div>
 </div>
+
+<footer class="text-center text-muted small py-3 border-top">
+    <a href="mailto:lusnak@stud.uniza.sk">Šimon Lušňák</a> &nbsp;·&nbsp;
+    &copy; 2020-<?= date('Y') ?> University of Žilina, Faculty of Management Science and Informatics,
+    Department of Software Technologies
+</footer>
