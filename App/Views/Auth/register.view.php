@@ -13,7 +13,7 @@ $view->setLayout('auth');
             <div class="card my-5">
                 <div class="card-body">
                     <h5 class="card-title text-center">Register</h5>
-                    <div class="text-center text-danger mb-3">
+                    <div id="reg-error" class="alert alert-danger <?= empty($error) ? 'd-none' : '' ?>">
                         <?= isset($error) ? htmlspecialchars($error) : '' ?>
                     </div>
                     <form method="post" action="<?= $link->url('auth.register') ?>">
