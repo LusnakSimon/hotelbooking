@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Core\Model;
-
-class User extends Model
+use Framework\Core\Model;
+use Framework\Core\IIdentity;
+class User extends Model implements IIdentity
 {
 
     protected ?int $id = null;
@@ -12,6 +12,11 @@ class User extends Model
 
     protected string $password_hash;
     protected string $role;
+
+    public function getName(): string
+    {
+        return $this->email;
+    }
 
     public function getId(): ?int
     {

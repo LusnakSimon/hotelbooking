@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Core\Model;
+use Framework\Core\Model;
 
 class Hotel extends Model
 {
@@ -13,7 +13,7 @@ class Hotel extends Model
 
     protected string $location;
     protected string $adress;
-    protected string $image_url;
+    protected string $image_path;
     protected string $description;
     protected float $price;
 
@@ -63,14 +63,14 @@ class Hotel extends Model
         $this->adress = $adress;
     }
 
-    public function getImageUrl(): string
+    public function getImagePath(): string
     {
-        return $this->image_url;
+        return $this->image_path;
     }
 
-    public function setImageUrl(string $image_url): void
+    public function setImagePath(string $image_path): void
     {
-        $this->image_url = $image_url;
+        $this->image_path = $image_path;
     }
 
     public function getDescription(): string
