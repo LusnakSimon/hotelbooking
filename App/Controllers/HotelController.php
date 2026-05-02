@@ -108,17 +108,13 @@ class HotelController extends BaseController
     {
         $id = (int)$request->value('id');
         $hotel = Hotel::getOne($id);
-        if ($hotel === null) {
-            return $this->redirect($this->url('hotel.index'));
-        }
 
         if ($request->isPost()) {
-            $oldImagePath = $hotel->getImagePath();
             $hotel->setFromRequest($request);
             $imagePath = $this->handleImageUpload($request);
             if ($imagePath !== null) {
+                $this->deleteImageFile($hotel->getImagePath());
                 $hotel->setImagePath($imagePath);
-                $this->deleteImageFile($oldImagePath);
             }
             $hotel->save();
             return $this->redirect($this->url('hotel.detail') . '&id=' . urlencode($hotel->getId()));
@@ -132,14 +128,9 @@ class HotelController extends BaseController
     {
         $id = (int)$request->value('id');
         $hotel = Hotel::getOne($id);
-        if ($hotel === null) {
-            return $this->redirect($this->url('hotel.index'));
-        }
         $rooms = Room::getAll('hotel_id = ?', [$id]);
         foreach ($rooms as $r) {
-            if (is_object($r)) {
-                $r->delete();
-            }
+            $r->delete();
         }
         $this->deleteImageFile($hotel->getImagePath());
         $hotel->delete();
@@ -149,15 +140,11 @@ class HotelController extends BaseController
     public function addRoom(Request $request): Response
     {
         $hotelId = (int)$request->value('hotel_id');
-
-        if ($request->isPost()) {
-            $beds = (int)$request->value('beds');
-            $room = new Room();
-            $room->setHotelId($hotelId);
-            $room->setBeds($beds);
-            $room->save();
-        }
-
+        $beds = (int)$request->value('beds');
+        $room = new Room();
+        $room->setHotelId($hotelId);
+        $room->setBeds($beds);
+        $room->save();
         return $this->redirect($this->url('hotel.edit') . '&id=' . urlencode($hotelId));
     }
 
@@ -165,9 +152,6 @@ class HotelController extends BaseController
     {
         $id = (int)$request->value('id');
         $room = Room::getOne($id);
-        if ($room === null) {
-            return $this->redirect($this->url('hotel.index'));
-        }
         $hotelId = $room->getHotelId();
         $room->delete();
         return $this->redirect($this->url('hotel.edit') . '&id=' . urlencode($hotelId));
@@ -175,10 +159,8 @@ class HotelController extends BaseController
 
     private function deleteImageFile(string $imagePath): void
     {
-        if (empty($imagePath)) return;
-        $file = __DIR__ . '/../../public/' . $imagePath;
-        if (is_file($file)) {
-            @unlink($file);
+        if (!empty($imagePath)) {
+            @unlink(__DIR__ . '/../../public/' . $imagePath);
         }
     }
 

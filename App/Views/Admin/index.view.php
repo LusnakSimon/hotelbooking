@@ -23,13 +23,12 @@ $view->setLayout('root');
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($hotels as $h): ?>
-                    <?php $hotel = $h; ?>
+                <?php foreach ($hotels as $hotel): ?>
                     <tr>
-                        <td><?= htmlspecialchars($hotel->getId()) ?></td>
+                        <td><?= $hotel->getId() ?></td>
                         <td><?= htmlspecialchars($hotel->getName()) ?></td>
                         <td><?= htmlspecialchars($hotel->getLocation()) ?></td>
-                        <td><?= htmlspecialchars(number_format($hotel->getPrice(), 2)) ?> €</td>
+                        <td><?= number_format($hotel->getPrice(), 2) ?> €</td>
                         <td class="text-end">
                             <a class="btn btn-sm btn-outline-primary" href="<?= $link->url('hotel.edit') ?>&id=<?= urlencode($hotel->getId()) ?>">Edit</a>
                             <a class="btn btn-sm btn-danger"

@@ -14,7 +14,7 @@ $view->setLayout('auth');
                 <div class="card-body">
                     <h5 class="card-title text-center">Login</h5>
                     <div class="text-center text-danger mb-3">
-                        <?= isset($error) ? htmlspecialchars($error) : (isset($message) ? htmlspecialchars($message) : '') ?>
+                        <?= $message ? htmlspecialchars($message) : '' ?>
                     </div>
                     <form class="form-signin" method="post" action="<?= $link->url('auth.login') ?>">
                         <div class="form-label-group mb-3">

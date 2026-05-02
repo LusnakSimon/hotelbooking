@@ -13,13 +13,11 @@ $view->setLayout('auth');
             <div class="card my-5">
                 <div class="card-body">
                     <h5 class="card-title text-center">Register</h5>
-                    <div id="reg-error" class="alert alert-danger <?= empty($error) ? 'd-none' : '' ?>">
-                        <?= isset($error) ? htmlspecialchars($error) : '' ?>
-                    </div>
-                    <form method="post" action="<?= $link->url('auth.register') ?>">
+                    <div id="reg-error" class="alert alert-danger d-none"></div>
+                    <form id="reg-form" method="post" action="<?= $link->url('auth.register') ?>">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input name="email" type="email" id="email" class="form-control" required value="<?= isset($email) ? htmlspecialchars($email) : '' ?>">
+                            <input name="email" type="email" id="email" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>

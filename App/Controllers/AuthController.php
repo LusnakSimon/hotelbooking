@@ -30,66 +30,49 @@ class AuthController extends BaseController
 
     public function login(Request $request): Response
     {
-        $logged = null;
+        $message = null;
         if ($request->isPost()) {
-            $email = strtolower(trim((string)$request->value('email')));
-            $password = (string)$request->value('password');
-            $logged = $this->app->getAuthenticator()->login($email, $password);
-            if ($logged) {
+            $email = strtolower(trim($request->value('email')));
+            $password = $request->value('password');
+            if ($this->app->getAuthenticator()->login($email, $password)) {
                 return $this->redirect($this->url('home.index'));
             }
+            $message = 'Invalid email or password';
         }
-
-        $message = $logged === false ? 'Invalid email or password' : null;
         return $this->html(compact('message'));
     }
 
     public function register(Request $request): Response
     {
         if ($request->isPost()) {
-            $email = strtolower(trim((string)$request->value('email')));
-            $password = (string)$request->value('password');
-            $confirm = (string)$request->value('confirm_password');
+            $email = strtolower(trim($request->value('email')));
+            $password = $request->value('password');
+            $confirm = $request->value('confirm_password');
 
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $error = 'Invalid email address.';
-                if ($request->isAjax()) return $this->json(['success' => false, 'error' => $error]);
-                return $this->html(['error' => $error, 'email' => $email]);
+                return $this->json(['success' => false, 'error' => 'Invalid email address.']);
             }
-
-            if (strlen($password) < 8 || !preg_match('/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W)/', $password)) {
-                $error = 'Password must be at least 8 chars and include upper, lower, digit and special char.';
-                if ($request->isAjax()) return $this->json(['success' => false, 'error' => $error]);
-                return $this->html(['error' => $error, 'email' => $email]);
+            if (strlen($password) < 8 ||
+                !preg_match('/[a-z]/', $password) ||
+                !preg_match('/[A-Z]/', $password) ||
+                !preg_match('/[0-9]/', $password) ||
+                !preg_match('/[^A-Za-z0-9]/', $password)) {
+                return $this->json(['success' => false, 'error' => 'Password must be at least 8 chars and include upper, lower, digit and special char.']);
             }
-
             if ($password !== $confirm) {
-                $error = 'Passwords do not match.';
-                if ($request->isAjax()) return $this->json(['success' => false, 'error' => $error]);
-                return $this->html(['error' => $error, 'email' => $email]);
+                return $this->json(['success' => false, 'error' => 'Passwords do not match.']);
             }
-
             if (User::getCount('email = ?', [$email]) > 0) {
-                $error = 'Email is already registered.';
-                if ($request->isAjax()) return $this->json(['success' => false, 'error' => $error]);
-                return $this->html(['error' => $error, 'email' => $email]);
+                return $this->json(['success' => false, 'error' => 'Email is already registered.']);
             }
 
             $user = new User();
             $user->setEmail($email);
             $user->setPasswordHash(password_hash($password, PASSWORD_DEFAULT));
             $user->setRole('guest');
-
-            try {
-                $user->save();
-                $this->app->getAuthenticator()->login($email, $password);
-                if ($request->isAjax()) return $this->json(['success' => true]);
-                return $this->redirect($this->url('home.index'));
-            } catch (\Throwable $e) {
-                $error = 'Failed to create account.';
-                if ($request->isAjax()) return $this->json(['success' => false, 'error' => $error]);
-                return $this->html(['error' => $error, 'email' => $email]);
-            }
+            $user->save();
+            $this->app->getAuthenticator()->login($email, $password);
+            return $this->json(['success' => true]);
         }
 
         return $this->html();

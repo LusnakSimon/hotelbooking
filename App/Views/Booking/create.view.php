@@ -13,8 +13,8 @@ $view->setLayout('root');
                 <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
             <div class="card p-3">
-                <p><strong>Hotel:</strong> <?= htmlspecialchars($hotel ? $hotel->getName() : '') ?></p>
-                <p><strong>Room:</strong> #<?= htmlspecialchars($room->getId()) ?> — Beds: <?= htmlspecialchars($room->getBeds()) ?></p>
+                <p><strong>Hotel:</strong> <?= htmlspecialchars($hotel->getName()) ?></p>
+                <p><strong>Room:</strong> #<?= $room->getId() ?> — Beds: <?= $room->getBeds() ?></p>
                 <form method="post">
                     <div class="mb-2">
                         <label for="from" class="form-label">Check-in</label>

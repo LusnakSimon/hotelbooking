@@ -13,8 +13,8 @@ $view->setLayout('root');
         <?php foreach ($bookings as $b): ?>
             <div class="list-group-item d-flex justify-content-between align-items-center">
                 <div>
-                    <div><strong><?= htmlspecialchars($b['hotel_name'] ?? ($b['hotel_id'] ?? 'Hotel')) ?></strong></div>
-                    <div>Room: <?= htmlspecialchars($b['room_id']) ?> — Beds: <?= htmlspecialchars($b['beds'] ?? '') ?></div>
+                    <div><strong><?= htmlspecialchars($b['hotel_name']) ?></strong></div>
+                    <div>Room: <?= $b['room_id'] ?> — Beds: <?= $b['beds'] ?></div>
                     <?php if (isset($b['user_email'])): ?>
                         <div class="small text-muted">Guest: <?= htmlspecialchars($b['user_email']) ?></div>
                     <?php endif; ?>

@@ -10,7 +10,7 @@ class Authenticator extends SessionAuthenticator
 {
     protected function authenticate(string $username, string $password): ?IIdentity
     {
-        $email = (string)$username;
+        $email = $username;
         $users = User::getAll('`email` = ?', [$email]);
         if (count($users) === 0) {
             return null;

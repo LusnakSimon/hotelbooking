@@ -24,10 +24,9 @@ class BookingController extends BaseController
                 $booking = Booking::getOne((int)$request->value('id'));
                 if ($booking === null) return false;
                 $room = Room::getOne($booking->getRoomId());
-                $hotel = $room ? Hotel::getOne($room->getHotelId()) : null;
+                $hotel = Hotel::getOne($room->getHotelId());
                 $isOwner = $booking->getUserId() === $this->user->getId();
                 $isManager = $this->user->getRole() === 'manager'
-                    && $hotel !== null
                     && $hotel->getManagerId() === $this->user->getId();
                 return $isOwner || $isManager;
             default:
@@ -81,9 +80,6 @@ class BookingController extends BaseController
     {
         $id = (int)$request->value('id');
         $booking = Booking::getOne($id);
-        if ($booking === null) {
-            return $this->redirect($this->url('booking.index'));
-        }
 
         if ($request->isPost()) {
             $from = $request->value('from');
@@ -107,9 +103,6 @@ class BookingController extends BaseController
     {
         $id = (int)$request->value('id');
         $booking = Booking::getOne($id);
-        if ($booking === null) {
-            return $this->redirect($this->url('booking.index'));
-        }
         $booking->delete();
         return $this->redirect($this->url('booking.index'));
     }
@@ -129,7 +122,7 @@ class BookingController extends BaseController
         if (strtotime($until) <= strtotime($from)) {
             return 'Check-out must be after check-in.';
         }
-        $where = '`room_id` = ? AND `from` < ? AND `until` > ?';
+        $where = '`room_id` = ? AND `from` <= ? AND `until` >= ?';
         $params = [$roomId, $until, $from];
         if ($excludeBookingId !== null) {
             $where .= ' AND `id` != ?';
