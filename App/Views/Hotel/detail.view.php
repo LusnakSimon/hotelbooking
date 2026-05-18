@@ -22,6 +22,12 @@ $view->setLayout('root');
                 </div>
             </div>
             <h4 class="mt-4">Rooms</h4>
+            <?php if ($user->isLoggedIn() && $user->getRole() === 'manager' && $hotel->getManagerId() === $user->getId()): ?>
+            <a class="btn btn-secondary mb-3" href="<?= $link->url('hotel.addRoom', ['hotel_id' => $hotel->getId()]) ?>">Manage rooms</a>
+            <?php endif; ?>
+            <?php if (empty($rooms)): ?>
+				<div class="alert alert-info">No rooms yet.</div>
+			<?php endif; ?>
             <div class="list-group">
                 <?php foreach ($rooms as $room): ?>
                     <div class="list-group-item d-flex justify-content-between align-items-center">
@@ -32,7 +38,7 @@ $view->setLayout('root');
                         <div class="text-end">
                             <div><?= number_format($hotel->getPrice(), 2) ?> € / night</div>
                             <?php if (!($user->isLoggedIn() && $user->getRole() === 'manager')): ?>
-                                <a class="btn btn-sm btn-primary mt-2" href="<?= $link->url('booking.create') ?>&room_id=<?= urlencode($room->getId()) ?>">Book</a>
+                                <a class="btn btn-sm btn-primary mt-2" href="<?= $link->url('booking.create', ['room_id' => $room->getId()]) ?>">Book</a>
                             <?php endif; ?>
                         </div>
                     </div>

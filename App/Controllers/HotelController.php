@@ -4,9 +4,11 @@ namespace App\Controllers;
 
 use App\Models\Hotel;
 use App\Models\Room;
+use App\Models\Booking;
 use Framework\Core\BaseController;
 use Framework\Http\Request;
 use Framework\Http\Responses\Response;
+use Framework\Http\HTTPException;
 
 class HotelController extends BaseController
 {
@@ -23,17 +25,16 @@ class HotelController extends BaseController
             case 'delete':
                 if (!($this->user->isLoggedIn() && $this->user->getRole() === 'manager')) return false;
                 $hotel = Hotel::getOne((int)$request->value('id'));
-                return $hotel !== null && $hotel->getManagerId() === $this->user->getId();
+                return $hotel->getManagerId() === $this->user->getId();
             case 'addRoom':
                 if (!($this->user->isLoggedIn() && $this->user->getRole() === 'manager')) return false;
                 $hotel = Hotel::getOne((int)$request->value('hotel_id'));
-                return $hotel !== null && $hotel->getManagerId() === $this->user->getId();
+                return $hotel->getManagerId() === $this->user->getId();
             case 'deleteRoom':
                 if (!($this->user->isLoggedIn() && $this->user->getRole() === 'manager')) return false;
                 $room = Room::getOne((int)$request->value('id'));
-                if ($room === null) return false;
                 $hotel = Hotel::getOne($room->getHotelId());
-                return $hotel !== null && $hotel->getManagerId() === $this->user->getId();
+                return $hotel->getManagerId() === $this->user->getId();
             default:
                 return false;
         }
@@ -81,8 +82,8 @@ class HotelController extends BaseController
     {
         $id = (int)$request->value('id');
         $hotel = Hotel::getOne($id);
-        if ($hotel === null) {
-            return $this->redirect($this->url('hotel.index'));
+        if (is_null($hotel)) { 
+            throw new HTTPException(404);
         }
         $rooms = Room::getAll('hotel_id = ?', [$id]);
         return $this->html(compact('hotel', 'rooms'));
@@ -90,17 +91,25 @@ class HotelController extends BaseController
 
     public function create(Request $request): Response
     {
+        $hotel = new Hotel();
+
         if ($request->isPost()) {
-            $hotel = new Hotel();
+            $error = $this->validateHotelData($request);
+
+            if ($error !== null) {
+                $hotel->setFromRequest($request);
+                $hotel->setManagerId($this->user->getId());
+                return $this->html(compact('hotel', 'error'));
+            }
+
             $hotel->setFromRequest($request);
             $hotel->setManagerId($this->user->getId());
             $imagePath = $this->handleImageUpload($request);
             $hotel->setImagePath($imagePath ?? '');
             $hotel->save();
-            return $this->redirect($this->url('hotel.detail') . '&id=' . urlencode($hotel->getId()));
+            return $this->redirect($this->url('hotel.detail', ['id' => $hotel->getId()]));
         }
 
-        $hotel = new Hotel();
         return $this->html(compact('hotel'));
     }
 
@@ -108,8 +117,18 @@ class HotelController extends BaseController
     {
         $id = (int)$request->value('id');
         $hotel = Hotel::getOne($id);
-
+        if (is_null($hotel)) { 
+            throw new HTTPException(404);
+        }
         if ($request->isPost()) {
+            $error = $this->validateHotelData($request);
+
+            if ($error !== null) {
+                $hotel->setFromRequest($request);
+                $rooms = Room::getAll('hotel_id = ?', [$id]);
+                return $this->html(compact('hotel', 'rooms', 'error'));
+            }
+
             $hotel->setFromRequest($request);
             $imagePath = $this->handleImageUpload($request);
             if ($imagePath !== null) {
@@ -117,7 +136,7 @@ class HotelController extends BaseController
                 $hotel->setImagePath($imagePath);
             }
             $hotel->save();
-            return $this->redirect($this->url('hotel.detail') . '&id=' . urlencode($hotel->getId()));
+            return $this->redirect($this->url('hotel.detail', ['id' => $hotel->getId()]));
         }
 
         $rooms = Room::getAll('hotel_id = ?', [$id]);
@@ -128,24 +147,44 @@ class HotelController extends BaseController
     {
         $id = (int)$request->value('id');
         $hotel = Hotel::getOne($id);
+        if (is_null($hotel)) { 
+            throw new HTTPException(404);
+        }
         $rooms = Room::getAll('hotel_id = ?', [$id]);
         foreach ($rooms as $r) {
+            $bookings = Booking::getAll('room_id = ?', [$r->getId()]);
+            foreach ($bookings as $b) {
+                $b->delete();
+            }
             $r->delete();
         }
         $this->deleteImageFile($hotel->getImagePath());
         $hotel->delete();
-        return $this->redirect($this->url('hotel.index'));
+        return $this->redirect($this->url('admin.index'));
     }
 
     public function addRoom(Request $request): Response
     {
         $hotelId = (int)$request->value('hotel_id');
-        $beds = (int)$request->value('beds');
-        $room = new Room();
-        $room->setHotelId($hotelId);
-        $room->setBeds($beds);
-        $room->save();
-        return $this->redirect($this->url('hotel.edit') . '&id=' . urlencode($hotelId));
+        $hotel = Hotel::getOne($hotelId);
+        if (is_null($hotel)) { 
+            throw new HTTPException(404);
+        }
+        $rooms = Room::getAll('hotel_id = ?', [$hotelId]);
+        if ($request->isPost()) {
+            $error = $this->validateRoomData($request);
+            if ($error !== null) {
+                $hotel = Hotel::getOne($hotelId);
+                $rooms = Room::getAll('hotel_id = ?', [$hotelId]);
+                return $this->html(compact('hotel', 'rooms', 'error'));
+            }
+
+            $room = new Room();
+            $room->setFromRequest($request);
+            $room->save();
+        }
+        return $this->html(compact('hotel', 'rooms'));
+        
     }
 
     public function deleteRoom(Request $request): Response
@@ -153,8 +192,77 @@ class HotelController extends BaseController
         $id = (int)$request->value('id');
         $room = Room::getOne($id);
         $hotelId = $room->getHotelId();
+        $bookings = Booking::getAll('room_id = ?', [$id]);
+        foreach ($bookings as $b) {
+            $b->delete();
+        }
         $room->delete();
-        return $this->redirect($this->url('hotel.edit') . '&id=' . urlencode($hotelId));
+        return $this->redirect($this->url('hotel.addRoom', ['id' => $hotelId]));
+    }
+
+    private function validateHotelData(Request $request): ?string
+    {
+        $name = $request->value('name');
+        $location = $request->value('location');
+        $address = $request->value('adress');
+        $price = $request->value('price');
+        $description = $request->value('description');
+
+        if ($name === '') {
+            return 'Name is required.';
+        }
+        if (mb_strlen($name) > 100) {
+            return 'Name must be at most 100 characters.';
+        }
+
+        if ($location === '') {
+            return 'Location is required.';
+        }
+        if (mb_strlen($location) > 100) {
+            return 'Location must be at most 100 characters.';
+        }
+
+        if ($address === '') {
+            return 'Address is required.';
+        }
+        if (mb_strlen($address) > 150) {
+            return 'Address must be at most 150 characters.';
+        }
+
+        if ($description === '') {
+            return 'Description is required.';
+        }
+        if (mb_strlen($description) > 2000) {
+            return 'Description must be at most 2000 characters.';
+        }
+
+        if ($price === '' || !is_numeric($price)) {
+            return 'Price must be a valid number.';
+        }
+        if ((float)$price <= 0) {
+            return 'Price must be greater than zero.';
+        }
+
+        return null;
+    }
+
+    private function validateRoomData(Request $request): ?string
+    {
+        $beds = $request->value('beds');
+
+        if ($beds === '' || !is_numeric($beds)) {
+            return 'Beds must be a valid number.';
+        }
+
+        $beds = (int)$beds;
+        if ($beds < 1) {
+            return 'Beds must be at least 1.';
+        }
+        if ($beds > 6) {
+            return 'Beds must be at most 6.';
+        }
+
+        return null;
     }
 
     private function deleteImageFile(string $imagePath): void

@@ -9,6 +9,9 @@ $isNew = $hotel->getId() === null;
     <div class="row justify-content-center">
         <div class="col-md-8">
             <h3><?= $isNew ? 'Create hotel' : 'Edit hotel' ?></h3>
+            <?php if (!empty($error)): ?>
+            <div class="alert alert-danger"><?= $error ?></div>
+            <?php endif; ?>
             <form method="post" enctype="multipart/form-data">
                 <div class="mb-2">
                     <label class="form-label">Name</label>
@@ -25,7 +28,7 @@ $isNew = $hotel->getId() === null;
                 <div class="mb-2">
                     <label class="form-label">Image</label>
                     <?php if (!$isNew && !empty($hotel->getImagePath())): ?>
-                        <div class="mb-1"><img src="<?= $link->asset($hotel->getImagePath()) ?>" style="height:80px;object-fit:cover;" alt="Current image"></div>
+                        <div><img src="<?= $link->asset($hotel->getImagePath()) ?>" class="hotel-preview-image" alt="Current image"></div>
                     <?php endif; ?>
                     <input name="image" type="file" class="form-control" accept="image/*">
                 </div>
