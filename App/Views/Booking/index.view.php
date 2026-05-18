@@ -21,11 +21,10 @@ $view->setLayout('root');
                     <div class="small">From: <?= htmlspecialchars($b['from']) ?> — Until: <?= htmlspecialchars($b['until']) ?></div>
                 </div>
                 <div>
-                    <a class="btn btn-sm btn-outline-primary" href="<?= $link->url('booking.edit') ?>&id=<?= urlencode($b['id']) ?>">Edit</a>
+                    <a class="btn btn-sm btn-outline-primary" href="<?= $link->url('booking.edit', ['id' => $b['id']]) ?>">Edit</a>
                     <a class="btn btn-sm btn-danger"
-                       data-bs-toggle="modal" data-bs-target="#confirm-modal"
-                       data-href="<?= $link->url('booking.delete') ?>&id=<?= urlencode($b['id']) ?>"
-                       data-message="Delete this booking?">Delete</a>
+                       href="<?= $link->url('booking.delete', ['id' => $b['id']]) ?>"
+                       onclick="return confirm('Are you sure?')">Delete</a>
                 </div>
             </div>
         <?php endforeach; ?>

@@ -8,7 +8,7 @@ use Framework\Http\Responses\Response;
 use App\Models\Booking;
 use App\Models\Room;
 use App\Models\Hotel;
-
+use Framework\Http\HTTPException;
 class BookingController extends BaseController
 {
     public function authorize(Request $request, string $action): bool
@@ -22,12 +22,10 @@ class BookingController extends BaseController
             case 'delete':
                 if (!$this->user->isLoggedIn()) return false;
                 $booking = Booking::getOne((int)$request->value('id'));
-                if ($booking === null) return false;
                 $room = Room::getOne($booking->getRoomId());
                 $hotel = Hotel::getOne($room->getHotelId());
                 $isOwner = $booking->getUserId() === $this->user->getId();
-                $isManager = $this->user->getRole() === 'manager'
-                    && $hotel->getManagerId() === $this->user->getId();
+                $isManager = $this->user->getRole() === 'manager' && $hotel->getManagerId() === $this->user->getId();
                 return $isOwner || $isManager;
             default:
                 return false;
@@ -50,11 +48,10 @@ class BookingController extends BaseController
     {
         $roomId = (int)$request->value('room_id');
         $room = Room::getOne($roomId);
-        if ($room === null) {
-            return $this->redirect($this->url('hotel.index'));
-        }
         $hotel = Hotel::getOne($room->getHotelId());
-
+        if (is_null($room) || is_null($hotel)) { 
+            throw new HTTPException(404);
+        }
         if ($request->isPost()) {
             $from = $request->value('from');
             $until = $request->value('until');
@@ -62,10 +59,9 @@ class BookingController extends BaseController
 
             if ($error === null) {
                 $booking = new Booking();
+                $booking->setFromRequest($request);
                 $booking->setRoomId($roomId);
                 $booking->setUserId($this->user->getId());
-                $booking->setFrom($from);
-                $booking->setUntil($until);
                 $booking->save();
                 return $this->redirect($this->url('booking.index'));
             }
@@ -80,7 +76,9 @@ class BookingController extends BaseController
     {
         $id = (int)$request->value('id');
         $booking = Booking::getOne($id);
-
+        if (is_null($booking)) { 
+            throw new HTTPException(404);
+        }
         if ($request->isPost()) {
             $from = $request->value('from');
             $until = $request->value('until');
@@ -115,9 +113,6 @@ class BookingController extends BaseController
     ): ?string {
         if (empty($from) || empty($until)) {
             return 'Please provide both check-in and check-out dates.';
-        }
-        if (strtotime($from) < strtotime(date('Y-m-d'))) {
-            return 'Check-in date cannot be in the past.';
         }
         if (strtotime($until) <= strtotime($from)) {
             return 'Check-out must be after check-in.';

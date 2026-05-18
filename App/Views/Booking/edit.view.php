@@ -9,7 +9,7 @@ $view->setLayout('root');
         <div class="col-md-6">
             <h3>Edit Booking</h3>
             <?php if (!empty($error)): ?>
-                <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+                <div class="alert alert-danger"><?= $error ?></div>
             <?php endif; ?>
             <div class="card p-3">
                 <form method="post">

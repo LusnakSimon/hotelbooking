@@ -10,7 +10,7 @@ $view->setLayout('root');
         <div class="col-md-6">
             <h3>Book Room</h3>
             <?php if (!empty($error)): ?>
-                <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+                <div class="alert alert-danger"><?= $error ?></div>
             <?php endif; ?>
             <div class="card p-3">
                 <p><strong>Hotel:</strong> <?= htmlspecialchars($hotel->getName()) ?></p>
