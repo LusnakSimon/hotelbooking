@@ -6,18 +6,11 @@ A PHP MVC web application for browsing hotels, managing rooms, and booking stays
 
 - **Hotel browsing** — list with live AJAX filtering by location and price range
 - **Hotel detail** — description, image, room list with per-room booking buttons
-- **Bookings** — guests create/edit/cancel bookings; managers see all bookings for their hotels
+- **Bookings** — guests create/view/edit/delete their bookings; managers can view/edit/delete all bookings for their hotels
 - **Manager dashboard** — create/edit/delete hotels and rooms, upload hotel images
 - **Authentication** — registration (with AJAX + server-side fallback), login, logout
 - **Role-based access** — two roles: `guest` (can book) and `manager` (can manage hotels)
 - **Image uploads** — hotel images stored in `public/uploads/`, accepted formats: jpg, jpeg, png, gif, webp
-
-## Roles
-
-| Role | Can do |
-|------|--------|
-| Guest | Browse hotels, create/edit/delete own bookings |
-| Manager | All of the above + create/edit/delete own hotels and their rooms; view all bookings for own hotels |
 
 ## Getting Started
 
