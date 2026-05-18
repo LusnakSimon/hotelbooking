@@ -13,9 +13,9 @@ $view->setLayout('auth');
             <div class="card card-signin my-5">
                 <div class="card-body">
                     <h5 class="card-title text-center">Login</h5>
-                    <div class="text-center text-danger mb-3">
-                        <?= $message ? htmlspecialchars($message) : '' ?>
-                    </div>
+                    <?php if (!empty($message)): ?>
+                    <div class="alert alert-danger"><?= $message ?></div>
+                    <?php endif; ?>
                     <form class="form-signin" method="post" action="<?= $link->url('auth.login') ?>">
                         <div class="form-label-group mb-3">
                             <label for="email" class="form-label">Email</label>
@@ -33,8 +33,9 @@ $view->setLayout('auth');
                             </button>
                         </div>
                     </form>
-                    <div class="mt-3 text-center">
-                        <a href="<?= $link->url('auth.register') ?>">Create an account</a>
+                    <div class="mt-3 d-flex justify-content-center gap-2">
+                        <a class="btn btn-outline-secondary" href="<?= $link->url('auth.register') ?>">Create an account</a>
+                        <a class="btn btn-outline-secondary" href="<?= $link->url('home.index') ?>">Back to Homepage</a>
                     </div>
                 </div>
             </div>

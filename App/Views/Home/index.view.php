@@ -5,7 +5,7 @@
 
 <div class="hero-section text-center py-5 mb-4">
     <h1 class="hero-title">Find Your Perfect Stay</h1>
-    <p class="hero-subtitle text-muted">Browse hotels, compare rooms and book instantly.</p>
+    <p class="hero-subtitle">Browse hotels, compare rooms and book instantly.</p>
     <a href="<?= $link->url('hotel.index') ?>" class="btn btn-primary btn-lg mt-2">Browse Hotels</a>
 </div>
 
@@ -37,6 +37,6 @@
 
 <footer class="text-center text-muted small py-3 border-top">
     <a href="mailto:lusnak@stud.uniza.sk">Šimon Lušňák</a> &nbsp;·&nbsp;
-    &copy; 2020-<?= date('Y') ?> University of Žilina, Faculty of Management Science and Informatics,
+    &copy; <?= date('Y') ?> University of Žilina, Faculty of Management Science and Informatics,
     Department of Software Technologies
 </footer>

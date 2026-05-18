@@ -15,7 +15,6 @@ $view->setLayout('root');
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Name</th>
                     <th>Location</th>
                     <th>Price</th>
@@ -25,16 +24,14 @@ $view->setLayout('root');
             <tbody>
                 <?php foreach ($hotels as $hotel): ?>
                     <tr>
-                        <td><?= $hotel->getId() ?></td>
                         <td><?= htmlspecialchars($hotel->getName()) ?></td>
                         <td><?= htmlspecialchars($hotel->getLocation()) ?></td>
                         <td><?= number_format($hotel->getPrice(), 2) ?> €</td>
                         <td class="text-end">
-                            <a class="btn btn-sm btn-outline-primary" href="<?= $link->url('hotel.edit') ?>&id=<?= urlencode($hotel->getId()) ?>">Edit</a>
+                            <a class="btn btn-sm btn-outline-primary" href="<?= $link->url('hotel.edit', ['id' => $hotel->getId()]) ?>">Edit</a>
                             <a class="btn btn-sm btn-danger"
-                               data-bs-toggle="modal" data-bs-target="#confirm-modal"
-                               data-href="<?= $link->url('hotel.delete') ?>&id=<?= urlencode($hotel->getId()) ?>"
-                               data-message="Delete hotel &quot;<?= htmlspecialchars($hotel->getName()) ?>&quot;?">Delete</a>
+                               href="<?= $link->url('hotel.delete', ['id' => $hotel->getId()]) ?>"
+                               onclick="return confirm('Are you sure?')">Delete</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

@@ -21,21 +21,23 @@ $view->setLayout('auth');
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input name="password" type="password" id="password" class="form-control" required>
+                            <input name="password" type="password" id="password" class="form-control" minlength="8" required>
                         </div>
                         <div class="mb-3">
                             <label for="confirm_password" class="form-label">Confirm password</label>
-                            <input name="confirm_password" type="password" id="confirm_password" class="form-control" required>
+                            <input name="confirm_password" type="password" id="confirm_password" class="form-control" minlength="8" required>
                         </div>
                         <div class="text-center">
                             <button class="btn btn-primary" type="submit" name="submit">Register</button>
                         </div>
                     </form>
-                    <div class="mt-3 text-center">
-                        <a href="<?= $link->url('auth.login') ?>">Back to login</a>
+                    <div class="mt-3 d-flex justify-content-center gap-2">
+                        <a class="btn btn-outline-secondary" href="<?= $link->url('auth.login') ?>">Back to login</a>
+                        <a class="btn btn-outline-secondary" href="<?= $link->url('home.index') ?>">Back to Homepage</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script src="<?= $link->asset('js/register.js') ?>"></script>

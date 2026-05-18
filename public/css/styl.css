@@ -8,12 +8,12 @@
 
 /* ── Navbar ────────────────────────────────────────────────────────────── */
 .navbar {
-    background-color: var(--navy) !important;
+    background-color: var(--navy);
     border-bottom: 3px solid var(--accent);
 }
 
 .navbar-brand {
-    color: #fff !important;
+    color: #fff;
     letter-spacing: .02em;
 }
 
@@ -52,7 +52,7 @@
 
 .hero-subtitle {
     font-size: 1.15rem;
-    color: rgba(255,255,255,.75) !important;
+    color: rgba(255,255,255,.75);
 }
 
 /* ── Body & layout ─────────────────────────────────────────────────────── */
@@ -129,6 +129,11 @@ body {
 /* ── Forms ─────────────────────────────────────────────────────────────── */
 form .text-danger {
     min-height: 1.2em;
+}
+
+.hotel-preview-image { 
+    height: 80px;
+    object-fit: cover; 
 }
 
 /* ── Responsive ────────────────────────────────────────────────────────── */

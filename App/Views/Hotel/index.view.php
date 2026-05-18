@@ -12,7 +12,7 @@ $view->setLayout('root');
     <div class="row mb-4">
         <div class="col-md-3">
             <h5>Filter</h5>
-            <form id="filter-form" data-filter-url="<?= $link->url('hotel.filter') ?>" data-detail-url="<?= $link->url('hotel.detail') ?>">
+            <form id="filter-form" action="<?= $link->url('hotel.filter') ?>">
                 <div class="mb-2">
                     <label for="location" class="form-label">Location</label>
                     <select id="location" name="location" class="form-select">
@@ -36,7 +36,7 @@ $view->setLayout('root');
             </form>
         </div>
         <div class="col-md-9">
-            <div id="hotel-list" data-asset-base="<?= $link->asset('') ?>" class="row">
+            <div id="hotel-list" class="row">
                 <?php foreach ($hotels as $hotel): ?>
                     <div class="col-md-6 mb-4">
                         <div class="card h-100">
@@ -55,4 +55,4 @@ $view->setLayout('root');
         </div>
     </div>
 </div>
-<script src="<?= $link->asset('js/hotel-index.js') ?>"></script>
+<script src="<?= $link->asset('js/hotel-filter.js') ?>"></script>
