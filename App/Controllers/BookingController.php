@@ -48,10 +48,10 @@ class BookingController extends BaseController
     {
         $roomId = (int)$request->value('room_id');
         $room = Room::getOne($roomId);
-        $hotel = Hotel::getOne($room->getHotelId());
-        if (is_null($room) || is_null($hotel)) { 
+        if (is_null($room)) { 
             throw new HTTPException(404);
         }
+        $hotel = Hotel::getOne($room->getHotelId());
         if ($request->isPost()) {
             $from = $request->value('from');
             $until = $request->value('until');
