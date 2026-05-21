@@ -97,8 +97,6 @@ class HotelController extends BaseController
             $error = $this->validateHotelData($request);
 
             if ($error !== null) {
-                $hotel->setFromRequest($request);
-                $hotel->setManagerId($this->user->getId());
                 return $this->html(compact('hotel', 'error'));
             }
 
@@ -124,9 +122,7 @@ class HotelController extends BaseController
             $error = $this->validateHotelData($request);
 
             if ($error !== null) {
-                $hotel->setFromRequest($request);
-                $rooms = Room::getAll('hotel_id = ?', [$id]);
-                return $this->html(compact('hotel', 'rooms', 'error'));
+                return $this->html(compact('hotel', 'error'));
             }
 
             $hotel->setFromRequest($request);
@@ -139,8 +135,7 @@ class HotelController extends BaseController
             return $this->redirect($this->url('hotel.detail', ['id' => $hotel->getId()]));
         }
 
-        $rooms = Room::getAll('hotel_id = ?', [$id]);
-        return $this->html(compact('hotel', 'rooms'));
+        return $this->html(compact('hotel'));
     }
 
     public function delete(Request $request): Response
@@ -174,8 +169,6 @@ class HotelController extends BaseController
         if ($request->isPost()) {
             $error = $this->validateRoomData($request);
             if ($error !== null) {
-                $hotel = Hotel::getOne($hotelId);
-                $rooms = Room::getAll('hotel_id = ?', [$hotelId]);
                 return $this->html(compact('hotel', 'rooms', 'error'));
             }
 
