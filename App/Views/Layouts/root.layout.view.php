@@ -15,7 +15,6 @@
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="<?= $link->asset('css/styl.css') ?>">
-    <script src="<?= $link->asset('js/delete-modal.js') ?>"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-sm navbar-dark">
